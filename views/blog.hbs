@@ -40,34 +40,32 @@
     </div>
     {{/if}}
     <!-- dynamic content would be here -->
+    {{#each blogs}}
     <div class="blog-list-item">
       <div class="blog-image">
         <img src="/public/assets/blog-img.png" alt="Pasar Coding di Indonesia Dinilai Masih Menjanjikan" />
       </div>
       <div class="blog-content">
+        {{#if isLogin}}
         <div class="button-group">
           <a class="btn-edit">Edit Post</button>
             <a class="btn-post">Delete Blog</a>
         </div>
+        {{/if}}
         <h1>
           <a href="/blog/78" target="_blank">
-            Pasar Coding di Indonesia Dinilai Masih Menjanjikan
+            {{this.title}}
           </a>
         </h1>
         <div class="detail-blog-content">
-          12 Jul 2021 22:30 WIB | Ichsan Emrald Alamsyah
+          {{this.posted_at}} | {{this.author}}
         </div>
         <p>
-          Ketimpangan sumber daya manusia (SDM) di sektor digital masih
-          menjadi isu yang belum terpecahkan. Berdasarkan penelitian
-          ManpowerGroup, ketimpangan SDM global, termasuk Indonesia,
-          meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum,
-          dolor sit amet consectetur adipisicing elit. Quam, molestiae
-          numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta,
-          eligendi debitis?
+          {{this.content}}
         </p>
       </div>
     </div>
+    {{/each}}
   </div>
 </body>
 
