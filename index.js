@@ -62,6 +62,11 @@ app.get('/blog', function (req, res) {
 })
 
 app.get('/add-blog', function (req, res) {
+
+    if (!isLogin) {
+        res.redirect('/home')
+    }
+
     res.render('form-blog')
 })
 
@@ -88,6 +93,15 @@ app.get('/blog/:id', function (req, res) {
     console.log(`Id dari client : ${id}`)
 
     res.render('blog-detail', { id: id })
+})
+
+app.get('/delete-blog/:index', function (req, res) {
+    let index = req.params.index
+
+    console.log(`Index data : ${index}`)
+
+    blogs.splice(index, 1)
+    res.redirect('/blog')
 })
 
 app.get('/contact-me', function (req, res) {
