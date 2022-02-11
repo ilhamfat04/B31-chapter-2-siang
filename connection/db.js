@@ -6,7 +6,7 @@ const dbPool = new Pool({
     database: 'personal-web-siang',
     port: 5432,
     user: 'postgres',
-    paassword: 'root' // based on your password at pg config
+    password: 'root' // based on your password at pg config
 })
 
 //export db pool

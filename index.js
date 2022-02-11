@@ -1,6 +1,9 @@
 // Pemanggilan package express
 const express = require('express')
 
+// import db connection
+const db = require('./connection/db')
+
 // Menggunakan package express
 const app = express()
 
@@ -49,7 +52,20 @@ app.get('/home', function (req, res) {
 
 app.get('/blog', function (req, res) {
 
-    console.log(blogs) // hanya ada 4 properti
+    let query = 'SELECT * FROM tb_blog'
+
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(query, (err, result) => {
+            done()
+
+            if (err) throw err
+            let data = result.rows
+
+            console.log(data);
+        })
+    })
 
     let dataBlogs = blogs.map(function (data) {
         return {
