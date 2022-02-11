@@ -1,5 +1,6 @@
 // Pemanggilan package express
 const express = require('express')
+const { is, get } = require('express/lib/request')
 
 // import db connection
 const db = require('./connection/db')
@@ -63,18 +64,17 @@ app.get('/blog', function (req, res) {
             if (err) throw err
             let data = result.rows
 
-            console.log(data);
+            data = data.map((blog) => {
+                return {
+                    ...blog,
+                    post_at: getFullTime(blog.post_at),
+                    isLogin: isLogin
+                }
+            })
+            res.render('blog', { isLogin: isLogin, blogs: data })
+
         })
     })
-
-    let dataBlogs = blogs.map(function (data) {
-        return {
-            ...data,
-            isLogin: isLogin
-        }
-    })
-
-    res.render('blog', { isLogin: isLogin, blogs: dataBlogs })
 })
 
 app.get('/add-blog', function (req, res) {
