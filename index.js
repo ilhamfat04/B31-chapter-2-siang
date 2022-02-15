@@ -13,8 +13,6 @@ app.set('view engine', 'hbs')
 app.use('/public', express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: false }))
 
-// true => sudah login
-// false => belum login
 const isLogin = true
 
 const blogs = [
@@ -70,6 +68,7 @@ app.get('/blog', function (req, res) {
                     isLogin: isLogin
                 }
             })
+
             res.render('blog', { isLogin: isLogin, blogs: data })
         })
     })
@@ -103,10 +102,23 @@ app.post('/blog', function (req, res) {
 })
 
 app.get('/blog/:id', function (req, res) {
-    let id = req.params.id
-    console.log(`Id dari client : ${id}`)
+    // let id = req.params.id
+    let { id } = req.params
 
-    res.render('blog-detail', { id: id })
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        let query = `SELECT * FROM tb_blog WHERE id=${id}`
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            result = result.rows[0]
+
+            res.render('blog-detail', { blog: result })
+        })
+    })
+
 })
 
 app.get('/delete-blog/:index', function (req, res) {
