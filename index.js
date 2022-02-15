@@ -157,7 +157,22 @@ app.get('/update-blog/:id', function (req, res) {
     })
 })
 
-app.post('/update-blog', function (req, res) {
+app.post('/update-blog/:id', function (req, res) {
+    let { id } = req.params
+    let { title, content } = req.body
+
+    let query = `UPDATE tb_blog SET title='${title}', content='${content}' WHERE id=${id}`
+
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            res.redirect('/blog')
+        })
+    })
 })
 
 app.get('/contact-me', function (req, res) {
