@@ -65,6 +65,7 @@ app.get('/blog', function (req, res) {
                 return {
                     ...blog,
                     post_at: getFullTime(blog.post_at),
+                    post_age: getDistanceTime(blog.post_at),
                     isLogin: isLogin
                 }
             })
@@ -114,11 +115,9 @@ app.get('/blog/:id', function (req, res) {
             if (err) throw err
 
             result = result.rows[0]
-
             res.render('blog-detail', { blog: result })
         })
     })
-
 })
 
 app.get('/delete-blog/:index', function (req, res) {
@@ -153,4 +152,31 @@ function getFullTime(time) {
     }
 
     return `${date} ${month[monthIndex]} ${year} ${hours}:${minutes} WIB`
+}
+
+function getDistanceTime(time) {
+    // waktu saat ini - waktu postingan
+    const distance = new Date() - new Date(time)
+    //Convert to day
+    const miliseconds = 1000
+    const secondsInMinute = 60
+    const minutesInHour = 60
+    const secondsInHour = secondsInMinute * minutesInHour
+    const hoursInDay = 23
+
+    let dayDistance = distance / (miliseconds * secondsInHour * hoursInDay)
+
+    if (dayDistance >= 1) {
+        return Math.floor(dayDistance) + ' day ago'
+    } else {
+        // convert to hour
+        let hourDistance = Math.floor(distance / (miliseconds * secondsInHour))
+        if (hourDistance > 0) {
+            return hourDistance + ' hour ago'
+        } else {
+            // convert to minute
+            const minuteDistance = Math.floor(distance / (miliseconds * secondsInMinute))
+            return minuteDistance + ' minute ago'
+        }
+    }
 }
