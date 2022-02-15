@@ -48,7 +48,7 @@
       <div class="blog-content">
         {{#if isLogin}}
         <div class="button-group">
-          <a class="btn-edit">Edit Post</button>
+          <a href="/update-blog/{{this.id}}" class="btn-edit">Edit Post</button>
             <a href="/delete-blog/{{this.id}}" class="btn-post">Delete Blog</a>
         </div>
         {{/if}}
