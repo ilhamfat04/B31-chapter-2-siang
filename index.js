@@ -1,6 +1,5 @@
 // Pemanggilan package express
 const express = require('express')
-const { is, get } = require('express/lib/request')
 
 // import db connection
 const db = require('./connection/db')
@@ -72,7 +71,6 @@ app.get('/blog', function (req, res) {
                 }
             })
             res.render('blog', { isLogin: isLogin, blogs: data })
-
         })
     })
 })
