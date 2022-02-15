@@ -121,13 +121,21 @@ app.get('/blog/:id', function (req, res) {
     })
 })
 
-app.get('/delete-blog/:index', function (req, res) {
-    let index = req.params.index
+app.get('/delete-blog/:id', function (req, res) {
+    let { id } = req.params
 
-    console.log(`Index data : ${index}`)
+    db.connect((err, client, done) => {
+        if (err) throw err
 
-    blogs.splice(index, 1)
-    res.redirect('/blog')
+        let query = `DELETE FROM tb_blog WHERE id=${id}`
+
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            res.redirect('/blog')
+        })
+    })
 })
 
 app.get('/contact-me', function (req, res) {
