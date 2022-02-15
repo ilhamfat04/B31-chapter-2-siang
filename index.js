@@ -15,15 +15,6 @@ app.use(express.urlencoded({ extended: false }))
 
 const isLogin = true
 
-const blogs = [
-    {
-        title: "Pasar Coding di Indonesia Dinilai Masih Menjanjikan",
-        content: "Ketimpangan sumber daya manusia (SDM) di sektor digital masih menjadi isu yang belum terpecahkan. Berdasarkan penelitian ManpowerGroup, ketimpangan SDM global, termasuk Indonesia, meningkat dua kali lipat dalam satu dekade terakhir. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quam, molestiae numquam! Deleniti maiores expedita eaque deserunt quaerat! Dicta, eligendi debitis?",
-        author: "Ichsan Emrald Alamsyah",
-        posted_at: "12 Jul 2021 22:30 WIB"
-    }
-]
-
 let month = [
     'January',
     'February',
@@ -50,7 +41,7 @@ app.get('/home', function (req, res) {
 
 app.get('/blog', function (req, res) {
 
-    let query = 'SELECT * FROM tb_blog'
+    let query = 'SELECT * FROM tb_blog ORDER BY id DESC'
 
     db.connect((err, client, done) => {
         if (err) throw err
@@ -85,21 +76,31 @@ app.get('/add-blog', function (req, res) {
 })
 
 app.post('/blog', function (req, res) {
-    let title = req.body.title
-    let content = req.body.content
-    let date = new Date()
+    // let title = req.body.title
+    // let content = req.body.content
+
+    let { title, content } = req.body
+
 
     let blog = {
         title: title,
         content,
-        author: "Ichsan Emrald Alamsyah",
-        posted_at: getFullTime(date)
+        image: 'image.png'
     }
 
-    blogs.push(blog)
+    db.connect((err, client, done) => {
+        if (err) throw err
 
-    res.redirect('/blog')
+        let query = `INSERT INTO tb_blog(title, content, image) VALUES
+                        ('${blog.title}', '${blog.content}', '${blog.image}')`
 
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            res.redirect('/blog')
+        })
+    })
 })
 
 app.get('/blog/:id', function (req, res) {
