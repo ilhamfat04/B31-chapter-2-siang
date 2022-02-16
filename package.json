@@ -12,6 +12,8 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "express": "^4.17.2",
+    "express-flash": "0.0.2",
+    "express-session": "^1.17.2",
     "hbs": "^4.2.0",
     "pg": "^8.7.3"
   },

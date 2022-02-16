@@ -47,6 +47,18 @@
     </nav>
     <!-- End Navbar -->
 
+    {{#if messages.danger}}
+    <div class="alert alert-danger" role="alert">
+        {{messages.danger}}
+    </div>
+    {{/if}}
+
+    {{#if messages.success}}
+    <div class="alert alert-success" role="alert">
+        {{messages.success}}
+    </div>
+    {{/if}}
+
     <!-- Form -->
     <div class="container-form-blog d-flex align-items-center justify-content-center">
 
@@ -74,7 +86,8 @@
             </form>
 
         </div>
-        <!-- End Form -->
+    </div>
+    <!-- End Form -->
 </body>
 
 </html>

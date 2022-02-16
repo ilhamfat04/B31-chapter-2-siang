@@ -4,6 +4,10 @@ const express = require('express')
 // Import package bcrypt
 const bcrypt = require('bcrypt')
 
+// import package express-flash and express-session
+const flash = require('express-flash')
+const session = require('express-session')
+
 // import db connection
 const db = require('./connection/db')
 
@@ -15,6 +19,24 @@ app.set('view engine', 'hbs')
 
 app.use('/public', express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: false }))
+
+// use express-flash
+app.use(flash())
+
+// setup session midleware
+app.use(
+    session({
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 2,
+            secure: false,
+            httpOnly: true
+        },
+        store: new session.MemoryStore(),
+        saveUninitialized: true,
+        resave: false,
+        secret: "secretValue"
+    })
+)
 
 const isLogin = true
 
@@ -200,7 +222,7 @@ app.post('/register', function (req, res) {
         client.query(query, (err, result) => {
             done()
             if (err) throw err
-
+            req.flash('success', 'Account succesfully registered ')
             res.redirect('/login')
         })
     });
@@ -223,12 +245,14 @@ app.post('/login', function (req, res) {
             if (err) throw err
 
             if (result.rows.length == 0) {
-                res.redirect('/login')
+                req.flash('danger', 'Account not found!')
+                return res.redirect('/login')
             }
 
             let isMatch = bcrypt.compareSync(password, result.rows[0].password)
 
             if (isMatch) {
+                req.flash('success', 'Login Success')
                 res.redirect('/blog')
             } else {
                 res.redirect('/login')

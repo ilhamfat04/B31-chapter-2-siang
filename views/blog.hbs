@@ -45,6 +45,12 @@
     </div>
   </nav>
 
+  {{#if messages.success}}
+  <div class="alert alert-success" role="alert">
+    {{messages.success}}
+  </div>
+  {{/if}}
+
   <!-- Blog list -->
   <div id="contents" class="blog-list">
     <!-- conditional post blog -->
