@@ -38,7 +38,6 @@ app.use(
     })
 )
 
-const isLogin = true
 
 let month = [
     'January',
@@ -61,7 +60,10 @@ app.get('/', function (req, res) {
 })
 
 app.get('/home', function (req, res) {
-    res.render('index')
+    res.render('index', {
+        isLogin: req.session.isLogin,
+        user: req.session.user
+    })
 })
 
 app.get('/blog', function (req, res) {
@@ -82,18 +84,22 @@ app.get('/blog', function (req, res) {
                     ...blog,
                     post_at: getFullTime(blog.post_at),
                     post_age: getDistanceTime(blog.post_at),
-                    isLogin: isLogin
+                    isLogin: req.session.isLogin
                 }
             })
 
-            res.render('blog', { isLogin: isLogin, blogs: data })
+            res.render('blog', {
+                isLogin: req.session.isLogin,
+                user: req.session.user,
+                blogs: data
+            })
         })
     })
 })
 
 app.get('/add-blog', function (req, res) {
 
-    if (!isLogin) {
+    if (!req.session.isLogin) {
         res.redirect('/home')
     }
 
@@ -252,6 +258,12 @@ app.post('/login', function (req, res) {
             let isMatch = bcrypt.compareSync(password, result.rows[0].password)
 
             if (isMatch) {
+                req.session.isLogin = true
+                req.session.user = {
+                    id: result.rows[0].id,
+                    email: result.rows[0].email,
+                    name: result.rows[0].name
+                }
                 req.flash('success', 'Login Success')
                 res.redirect('/blog')
             } else {
@@ -260,6 +272,11 @@ app.post('/login', function (req, res) {
         })
     })
 
+})
+
+app.get('/logout', function (req, res) {
+    req.session.destroy()
+    res.redirect('/home')
 })
 
 // Konfigurasi port aplikasi
