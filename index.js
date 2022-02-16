@@ -210,6 +210,34 @@ app.get('/login', function (req, res) {
     res.render('login')
 })
 
+app.post('/login', function (req, res) {
+    let { email, password } = req.body
+
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        let query = `SELECT * FROM tb_user WHERE email='${email}'`
+
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            if (result.rows.length == 0) {
+                res.redirect('/login')
+            }
+
+            let isMatch = bcrypt.compareSync(password, result.rows[0].password)
+
+            if (isMatch) {
+                res.redirect('/blog')
+            } else {
+                res.redirect('/login')
+            }
+        })
+    })
+
+})
+
 // Konfigurasi port aplikasi
 const port = 5000
 app.listen(port, function () {
