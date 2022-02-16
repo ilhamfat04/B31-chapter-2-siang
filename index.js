@@ -179,6 +179,14 @@ app.get('/contact-me', function (req, res) {
     res.render('contact')
 })
 
+app.get('/register', function (req, res) {
+    res.render('register')
+})
+
+app.get('/login', function (req, res) {
+    res.render('login')
+})
+
 // Konfigurasi port aplikasi
 const port = 5000
 app.listen(port, function () {
