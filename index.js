@@ -1,6 +1,9 @@
 // Pemanggilan package express
 const express = require('express')
 
+// Import package bcrypt
+const bcrypt = require('bcrypt')
+
 // import db connection
 const db = require('./connection/db')
 
@@ -181,6 +184,26 @@ app.get('/contact-me', function (req, res) {
 
 app.get('/register', function (req, res) {
     res.render('register')
+})
+
+app.post('/register', function (req, res) {
+    let { name, email, password } = req.body
+
+    let hashPassword = bcrypt.hashSync(password, 10)
+
+    db.connect((err, client, done) => {
+        if (err) throw err
+
+        let query = `INSERT INTO tb_user(name, email, password) VALUES
+                        ('${name}','${email}','${hashPassword}')`
+
+        client.query(query, (err, result) => {
+            done()
+            if (err) throw err
+
+            res.redirect('/login')
+        })
+    });
 })
 
 app.get('/login', function (req, res) {
