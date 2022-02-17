@@ -68,11 +68,23 @@ app.get('/home', function (req, res) {
 
 app.get('/blog', function (req, res) {
 
-    let query = `SELECT tb_blog.id, title, content, image, post_at, name AS author
+    let query
+
+    if (req.session.isLogin) {
+        query = `SELECT tb_blog.id, title, content, image, post_at, name AS author
+                    FROM tb_blog 
+                    INNER JOIN tb_user 
+                    ON tb_user.id = tb_blog.author_id
+                    WHERE author_id = ${req.session.user.id}
+                    ORDER BY id DESC`
+    } else {
+        query = `SELECT tb_blog.id, title, content, image, post_at, name AS author
                     FROM tb_blog 
                     INNER JOIN tb_user 
                     ON tb_user.id = tb_blog.author_id
                     ORDER BY id DESC`
+    }
+
 
     db.connect((err, client, done) => {
         if (err) throw err
