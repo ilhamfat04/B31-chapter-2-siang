@@ -11,6 +11,9 @@ const session = require('express-session')
 // import db connection
 const db = require('./connection/db')
 
+// import middleware upload
+const upload = require('./middlewares/uploadFile')
+
 // Menggunakan package express
 const app = express()
 
@@ -18,6 +21,7 @@ const app = express()
 app.set('view engine', 'hbs')
 
 app.use('/public', express.static(__dirname + '/public'))
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(express.urlencoded({ extended: false }))
 
 // use express-flash
@@ -122,14 +126,14 @@ app.get('/add-blog', function (req, res) {
     res.render('form-blog')
 })
 
-app.post('/blog', function (req, res) {
+app.post('/blog', upload.single('image'), function (req, res) {
     let { title, content } = req.body
 
 
     let blog = {
         title: title,
         content,
-        image: 'image.png',
+        image: req.file.filename,
         author_id: req.session.user.id
     }
 

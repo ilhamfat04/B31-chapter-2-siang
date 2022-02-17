@@ -45,7 +45,7 @@
     </div>
   </nav>
 
-  <form class="form-container" action="/blog" method="POST">
+  <form class="form-container" action="/blog" method="POST" enctype="multipart/form-data">
     <h1>Create Post Blog</h1>
     <div>
       <label for="input-title" class="form-label">Title</label>
@@ -57,7 +57,7 @@
     </div>
     <div>
       <label for="input-image" class="form-label">Upload Image</label>
-      <input class="form-control" type="file" id="input-image">
+      <input class="form-control" type="file" id="input-image" name="image">
     </div>
     <div class="d-flex justify-content-end">
       <button type="submit" class="btn">Post Blog</button>
