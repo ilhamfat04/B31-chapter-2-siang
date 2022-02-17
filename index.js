@@ -68,7 +68,11 @@ app.get('/home', function (req, res) {
 
 app.get('/blog', function (req, res) {
 
-    let query = 'SELECT * FROM tb_blog ORDER BY id DESC'
+    let query = `SELECT tb_blog.id, title, content, image, post_at, name AS author
+                    FROM tb_blog 
+                    INNER JOIN tb_user 
+                    ON tb_user.id = tb_blog.author_id
+                    ORDER BY id DESC`
 
     db.connect((err, client, done) => {
         if (err) throw err
@@ -121,7 +125,7 @@ app.post('/blog', function (req, res) {
         if (err) throw err
 
         let query = `INSERT INTO tb_blog(title, content, image, author_id) VALUES
-                        ('${blog.title}', '${blog.content}', '${blog.image}', '${blog.author_id}')`
+                    ('${blog.title}', '${blog.content}', '${blog.image}', '${blog.author_id}')`
 
         client.query(query, (err, result) => {
             done()
