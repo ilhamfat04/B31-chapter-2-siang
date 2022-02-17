@@ -107,23 +107,21 @@ app.get('/add-blog', function (req, res) {
 })
 
 app.post('/blog', function (req, res) {
-    // let title = req.body.title
-    // let content = req.body.content
-
     let { title, content } = req.body
 
 
     let blog = {
         title: title,
         content,
-        image: 'image.png'
+        image: 'image.png',
+        author_id: req.session.user.id
     }
 
     db.connect((err, client, done) => {
         if (err) throw err
 
-        let query = `INSERT INTO tb_blog(title, content, image) VALUES
-                        ('${blog.title}', '${blog.content}', '${blog.image}')`
+        let query = `INSERT INTO tb_blog(title, content, image, author_id) VALUES
+                        ('${blog.title}', '${blog.content}', '${blog.image}', '${blog.author_id}')`
 
         client.query(query, (err, result) => {
             done()
